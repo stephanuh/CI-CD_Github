@@ -1,16 +1,13 @@
-import models from '../models/index.js';
-import db from '../config/connection.js';
+import { Question } from '../models/index.js';
 
-export default async (modelName: "Question", collectionName: string) => {
-  try {
-    let modelExists = await models[modelName].db.db.listCollections({
-      name: collectionName
-    }).toArray()
-
-    if (modelExists.length) {
-      await db.dropCollection(collectionName);
-    }
+const cleanDB = async (): Promise<void> => {
+  try{
+    await Question.deleteMany({});
+    console.log('Database cleaned!');
   } catch (err) {
-    throw err;
+    console.error('Error cleaning the database:', err);
+    process.exit(1);
   }
-}
+};
+
+export default cleanDB;
